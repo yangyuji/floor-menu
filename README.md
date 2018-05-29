@@ -16,5 +16,5 @@
 > * 代码优化（现在实在是有点随意，将就着看，o(^▽^)o）；
 
 ## 预览
-> * 页面[点击这里](https://yangyuji.github.io/floorMemu/demo.html)
-> * ![扫描二维码](https://github.com/yangyuji/floorMemu/blob/master/qrcode.png)
+> * 页面[点击这里](https://yangyuji.github.io/floor-memu/demo.html)
+> * ![扫描二维码](https://github.com/yangyuji/floor-memu/blob/master/qrcode.png)
