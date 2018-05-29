@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta content="telephone=no,email=no" name="format-detection">
+    <title>floor memu</title>
+    <link href="./floor-memu.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="floor0" style="height: 200px;width:100%;background-color:salmon;">
+    <h3 style="color:#666;">楼层0</h3>
+</div>
+
+<div id="floor" class="floor">
+    <div class="floor-placeholder"></div>
+    <div class="floor-inner">
+        <div class="floor-tabs">
+            <div class="floor-tabs-inner">
+                <div class="tabs-scroll-list">
+                    <a class="tabs-nav" href="#floor0">楼层0</a>
+                    <a class="tabs-nav" href="#floor1">楼层1</a>
+                    <a class="tabs-nav" href="#floor2">楼层2</a>
+                    <a class="tabs-nav" href="#floor3">楼层3</a>
+                    <a class="tabs-nav" href="#floor4">楼层4</a>
+                    <a class="tabs-nav" href="#floor5">楼层5</a>
+                    <a class="tabs-nav" href="#floor6">楼层6</a>
+                </div>
+            </div>
+            <img class="floor-icon-shadow"
+                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAABQCAYAAABf9vbdAAAAAXNSR0IArs4c6QAAAqdJREFUaAXtmsFSwzAMRFvg/z+ZknX7zEpxekRixp6BlWQXv5USLnC/1az74lqvrWJq0hl/LX5QRQkg3U280lOtgwGgruDZl/LF2XuFAYAE8W6dYI/D1KZWGLiCxhhwnCN3/cBMtQGgHdbjJfQLfpioNuCwHju44tlxi1sZEDzQHlNDMSItNyAoLfSZ/eaX0MfBFgYAlroJwKmTo8CXT8ANOCx1gKUOHWIl3ZaDv4uHkW4GBKyFErsRJqDaR7WBDCpgFtDKicU7wA8dcbUBh1OsBeyVBhMdDDyxn98F7evKBPXyR8hhiTGx0gl+HB5x1QSAAzor+64DGPBDx6NUZSADKwc27wGe6+MznQxkwGwII0G7GQDalXh0/PjW2gCQq2m4kXmuywQyXDbgORMYJroYcEDilalTrbMBjKAZfkziPxnASNBtILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjIPlPE3ik/ih/dDaQgcV/qnUxcAJL3fZ0dP5VaDmBlRmHxsw412UCAepIMJHByad2M4ARKSaoTejX3sg7GcjAGZzctewduIIFjn1Xxf71rbzTBN7Ba+8E39EAHXczDp7j709O/qHyF/fxl3a713Pileojqo9V/Qh5xz0WHN32eDz3R0Ha8h3ABOrwGJrwMtHl3+8FygIe4CuVkVsnA4DzfDv4gMWh6aP6JRYLwLyw8Hmdc9Q4c6s0ABTqBjJozlsaAGoF6zWP20zAp4CRrAGczepHCPCsS1igD537nQy4CeIJavAhrDAAHCAOSYzms3yGX7kl78AKagXsNcClwA/tMAHgHNhj9h1+1n4AQ71onRInno4AAAAASUVORK5CYII=">
+            <div class="floor-icon-down">
+                <svg viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <polygon fill="#A30F7C" fill-rule="nonzero" points="28 15.1144797 28.7045635 15.8241207 20.4099341 24.0594021 12 15.709641 12.7045635 15 20.4099341 22.6502388"></polygon>
+                    </g>
+                </svg>
+            </div>
+            <div class="floor-more" style="display: none;">
+                <header><h3>全部楼层</h3><img class="floor-icon-shadow"
+                                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAABQCAYAAABf9vbdAAAAAXNSR0IArs4c6QAAAqdJREFUaAXtmsFSwzAMRFvg/z+ZknX7zEpxekRixp6BlWQXv5USLnC/1az74lqvrWJq0hl/LX5QRQkg3U280lOtgwGgruDZl/LF2XuFAYAE8W6dYI/D1KZWGLiCxhhwnCN3/cBMtQGgHdbjJfQLfpioNuCwHju44tlxi1sZEDzQHlNDMSItNyAoLfSZ/eaX0MfBFgYAlroJwKmTo8CXT8ANOCx1gKUOHWIl3ZaDv4uHkW4GBKyFErsRJqDaR7WBDCpgFtDKicU7wA8dcbUBh1OsBeyVBhMdDDyxn98F7evKBPXyR8hhiTGx0gl+HB5x1QSAAzor+64DGPBDx6NUZSADKwc27wGe6+MznQxkwGwII0G7GQDalXh0/PjW2gCQq2m4kXmuywQyXDbgORMYJroYcEDilalTrbMBjKAZfkziPxnASNBtILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjINkTKGh6uHJPILSjIPlPE3ik/ih/dDaQgcV/qnUxcAJL3fZ0dP5VaDmBlRmHxsw412UCAepIMJHByad2M4ARKSaoTejX3sg7GcjAGZzctewduIIFjn1Xxf71rbzTBN7Ba+8E39EAHXczDp7j709O/qHyF/fxl3a713Pileojqo9V/Qh5xz0WHN32eDz3R0Ha8h3ABOrwGJrwMtHl3+8FygIe4CuVkVsnA4DzfDv4gMWh6aP6JRYLwLyw8Hmdc9Q4c6s0ABTqBjJozlsaAGoF6zWP20zAp4CRrAGczepHCPCsS1igD537nQy4CeIJavAhrDAAHCAOSYzms3yGX7kl78AKagXsNcClwA/tMAHgHNhj9h1+1n4AQ71onRInno4AAAAASUVORK5CYII=">
+                    <div class="floor-more-close">
+                        <svg viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <polygon fill="#A30F7C" fill-rule="nonzero" points="28 15.1144797 28.7045635 15.8241207 20.4099341 24.0594021 12 15.709641 12.7045635 15 20.4099341 22.6502388"></polygon>
+                            </g>
+                        </svg>
+                    </div>
+                </header>
+                <ul>
+                    <li class="more-item"><a href="#floor0">楼层0</a></li>
+                    <li class="more-item"><a href="#floor1">楼层1</a></li>
+                    <li class="more-item"><a href="#floor2">楼层2</a></li>
+                    <li class="more-item"><a href="#floor3">楼层3</a></li>
+                    <li class="more-item"><a href="#floor4">楼层4</a></li>
+                    <li class="more-item"><a href="#floor5">楼层5</a></li>
+                    <li class="more-item"><a href="#floor6">楼层6</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="floor1" style="height: 200px;width:100%;background-color:aqua;">
+    <h3 style="color:#666;">楼层一</h3>
+</div>
+
+<div id="floor2" style="height: 400px;width:100%;background-color:blue;">
+    <h3>楼层二</h3>
+</div>
+
+<div id="floor3" style="height: 500px;width:100%;background-color:green;">
+    <h3>楼层三</h3>
+</div>
+
+<div id="floor4" style="height: 800px;width:100%;background-color:red;">
+    <h3>楼层四</h3>
+</div>
+
+<div id="floor5" style="height: 700px;width:100%;background-color:gray;">
+    <h3>楼层五</h3>
+</div>
+
+<div id="floor6" style="height: 900px;width:100%;background-color:springgreen;">
+    <h3>楼层六</h3>
+</div>
+
+<script src="./floormemu.js"></script>
+<script type="text/javascript">
+    floormemu('#floor');
+</script>
+</body>
+</html>
