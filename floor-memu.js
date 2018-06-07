@@ -103,7 +103,8 @@
 
                             for (var i = 0; i < scopes.length; i++) {
                                 if (scopes[i].hash == this.hash) {
-                                    body.scrollTop = scopes[i].min - floorHeight;
+                                    win.scroll(0, scopes[i].min - floorHeight);
+                                    //body.scrollTop = scopes[i].min - floorHeight;
                                     break;
                                 }
                             }
@@ -137,7 +138,7 @@
 
                 // 要加上导航条的高度作纠正
                 // 加上1像素可以弥补小数点问题
-                var scrollTop = body.scrollTop + floorHeight + 1;
+                var scrollTop = (body.scrollTop || win.pageYOffset) + floorHeight + 1;
                 for (var i = 0; i < scopes.length; i++) {
                     if (scrollTop >= scopes[i].min && scrollTop < scopes[i].max) {
                         links[i].classList.add('active');
@@ -152,7 +153,7 @@
 
             // 初始化页内标签的高度范围
             function initLinksScope() {
-                var scrollTop = body.scrollTop;
+                var scrollTop = body.scrollTop || win.pageYOffset;
                 for (var i = 0; i < links.length; i++) {
                     var range = { hash: links[i].hash };
                     range.min = utils.getEle(doc, links[i].hash).getBoundingClientRect().top + scrollTop;
