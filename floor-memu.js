@@ -53,7 +53,7 @@
 
             var win = window,
                 doc = win.document,
-                body = doc.documentElement || doc.body,
+                body = doc.body.clientHeight ? doc.body : doc.documentElement,
                 scopes = [], links = [], linksMore = [],
                 floorHeight = 0, isSticky = false;
 
