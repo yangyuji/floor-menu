@@ -1,8 +1,8 @@
 /*
 * author: "oujizeng",
 * license: "MIT",
-* name: "floormemu.js",
-* version: "1.0.1"
+* name: "floor-memu.js",
+* version: "1.1.0"
 */
 
 (function (root, factory) {
@@ -53,6 +53,7 @@
 
             var win = window,
                 doc = win.document,
+                body = doc.documentElement || doc.body,
                 scopes = [], links = [], linksMore = [],
                 floorHeight = 0, isSticky = false;
 
@@ -102,9 +103,7 @@
 
                             for (var i = 0; i < scopes.length; i++) {
                                 if (scopes[i].hash == this.hash) {
-                                    // 暂时还没找到兼容写法
-                                    doc.documentElement.scrollTop = scopes[i].min - floorHeight;
-                                    doc.body.scrollTop = scopes[i].min - floorHeight;
+                                    body.scrollTop = scopes[i].min - floorHeight;
                                     break;
                                 }
                             }
@@ -138,7 +137,7 @@
 
                 // 要加上导航条的高度作纠正
                 // 加上1像素可以弥补小数点问题
-                var scrollTop = doc.documentElement.scrollTop || doc.body.scrollTop + floorHeight + 1;
+                var scrollTop = body.scrollTop + floorHeight + 1;
                 for (var i = 0; i < scopes.length; i++) {
                     if (scrollTop >= scopes[i].min && scrollTop < scopes[i].max) {
                         links[i].classList.add('active');
@@ -153,14 +152,14 @@
 
             // 初始化页内标签的高度范围
             function initLinksScope() {
-                var scrollTop = doc.documentElement.scrollTop || doc.body.scrollTop;
+                var scrollTop = body.scrollTop;
                 for (var i = 0; i < links.length; i++) {
                     var range = { hash: links[i].hash };
                     range.min = utils.getEle(doc, links[i].hash).getBoundingClientRect().top + scrollTop;
                     if (i < links.length - 1) {
                         range.max = utils.getEle(doc, links[i + 1].hash).getBoundingClientRect().top + scrollTop;
                     } else {
-                        range.max = doc.documentElement.scrollHeight || doc.body.scrollHeight;
+                        range.max = body.scrollHeight;
                     }
                     scopes.push(range);
                 }
