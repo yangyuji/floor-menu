@@ -2,7 +2,7 @@
 * author: "oujizeng",
 * license: "MIT",
 * name: "floor-memu.js",
-* version: "1.1.0"
+* version: "1.1.2"
 */
 
 (function (root, factory) {
@@ -53,7 +53,6 @@
 
             var win = window,
                 doc = win.document,
-                body = doc.documentElement || doc.body,
                 scopes = [], links = [], linksMore = [],
                 floorHeight = 0, isSticky = false;
 
@@ -75,7 +74,19 @@
             floorHeight = floor.offsetHeight;
 
             // 标签对应的高度集合
-            initLinksScope();
+            (function initLinksScope() {
+                var scrollTop = doc.documentElement.scrollTop || doc.body.scrollTop || win.pageYOffset;
+                for (var i = 0; i < links.length; i++) {
+                    var range = { hash: links[i].hash };
+                    range.min = utils.getEle(doc, links[i].hash).getBoundingClientRect().top + scrollTop;
+                    if (i < links.length - 1) {
+                        range.max = utils.getEle(doc, links[i + 1].hash).getBoundingClientRect().top + scrollTop;
+                    } else {
+                        range.max = doc.documentElement.scrollHeight || doc.body.scrollHeight;
+                    }
+                    scopes.push(range);
+                }
+            })();
 
             // 支持 sticky
             if (utils.supportSticky()) {
@@ -83,9 +94,7 @@
                 floor.classList.add('floor-sticky');
             }
 
-            eventBind();
-
-            function eventBind() {
+            (function eventBind() {
                 // 监听滚动
                 var floorFun = utils.throttle(floorScroll, 0, 1000 / 60);
                 win.addEventListener('scroll', floorFun, false);
@@ -104,7 +113,6 @@
                             for (var i = 0; i < scopes.length; i++) {
                                 if (scopes[i].hash == this.hash) {
                                     win.scroll(0, scopes[i].min - floorHeight);
-                                    //body.scrollTop = scopes[i].min - floorHeight;
                                     break;
                                 }
                             }
@@ -122,7 +130,7 @@
                     ev.preventDefault();
                     ev.stopPropagation();
                 });
-            }
+            })();
 
             //　楼层滚动方法
             function floorScroll() {
@@ -138,7 +146,7 @@
 
                 // 要加上导航条的高度作纠正
                 // 加上1像素可以弥补小数点问题
-                var scrollTop = (body.scrollTop || win.pageYOffset) + floorHeight + 1;
+                var scrollTop = (doc.documentElement.scrollTop || doc.body.scrollTop || win.pageYOffset) + floorHeight + 1;
                 for (var i = 0; i < scopes.length; i++) {
                     if (scrollTop >= scopes[i].min && scrollTop < scopes[i].max) {
                         links[i].classList.add('active');
@@ -148,21 +156,6 @@
                         links[i].classList.remove('active');
                         linksMore[i].classList.remove('active');
                     }
-                }
-            }
-
-            // 初始化页内标签的高度范围
-            function initLinksScope() {
-                var scrollTop = body.scrollTop || win.pageYOffset;
-                for (var i = 0; i < links.length; i++) {
-                    var range = { hash: links[i].hash };
-                    range.min = utils.getEle(doc, links[i].hash).getBoundingClientRect().top + scrollTop;
-                    if (i < links.length - 1) {
-                        range.max = utils.getEle(doc, links[i + 1].hash).getBoundingClientRect().top + scrollTop;
-                    } else {
-                        range.max = body.scrollHeight;
-                    }
-                    scopes.push(range);
                 }
             }
         }
