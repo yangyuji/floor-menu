@@ -1,6 +1,7 @@
 /*
 * author: "oujizeng",
 * license: "MIT",
+* github: "https://github.com/yangyuji/floor-memu",
 * name: "floor-memu.js",
 * version: "1.1.2"
 */
@@ -8,6 +9,8 @@
 (function (root, factory) {
     if (typeof module != 'undefined' && module.exports) {
         module.exports = factory();
+    } else if (typeof define == 'function' && define.amd) {
+        define( function () { return factory(); } );
     } else {
         root['floorMemu'] = factory();
     }
@@ -45,7 +48,7 @@
                 }
             }
         }
-    }
+    };
 
     var floorMemu = {
 
