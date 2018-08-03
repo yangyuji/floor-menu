@@ -3,7 +3,7 @@
 * license: "MIT",
 * github: "https://github.com/yangyuji/floor-memu",
 * name: "floor-memu.js",
-* version: "1.1.2"
+* version: "1.2.0"
 */
 
 (function (root, factory) {
@@ -28,137 +28,114 @@
             var e = document.createElement("div");
             return window.CSS && window.CSS.supports ? window.CSS.supports("(position: sticky) or (position: -webkit-sticky)") : (e.style.position = "sticky",
                 "sticky" === e.style.position ? !0 : (e.style.position = "-webkit-sticky", "-webkit-sticky" === e.style.position ? !0 : (e = null, !1)))
-        },
-        // 节流函数
-        throttle: function (method, delay, duration) {
-            var timer = null;
-            var begin = new Date();
-            return function () {
-                var context = this,
-                    args = arguments;
-                var now = new Date();
-                clearTimeout(timer);
-                if(now - begin >= duration) {
-                    method.apply(context, args);
-                    begin = now;
-                } else {
-                    timer = setTimeout(function() {
-                        method.apply(context, args);
-                    }, delay);
-                }
-            }
         }
     };
 
-    var floorMemu = {
+    function floorMemu (el) {
+        this.floor = typeof el == 'string' ? document.querySelector(el) : el;
+        // 导航标签
+        this.links = utils.getAll(this.floor, 'a.tabs-nav');
+        this.linksMore = utils.getAll(this.floor, 'li.more-item');
+        // 导航条高度
+        this.height = this.floor.offsetHeight;
+        this.scopes = this._initScopes();
+    }
 
-        init: function(id) {
-
-            var win = window,
-                doc = win.document,
-                scopes = [], links = [], linksMore = [],
-                floorHeight = 0, isSticky = false;
-
-            // 楼层定位组件
-            var floor = utils.getEle(doc, id);
-            if (!floor) return;
-
+    floorMemu.prototype = {
+        version: '1.2.0',
+        // 初始化
+        init: function () {
+            if (!this.floor) return;
             // 楼层定位组件的滚动
-            // var myScroll = new IScroll('.floor-tabs-inner', {
+            // this.iScroll = new IScroll('.floor-tabs-inner', {
             //     scrollX: true,
             //     preventDefault: false,
             //     scrollbars: false
             // });
-
-            // 导航标签
-            links = utils.getAll(floor, 'a.tabs-nav');
-            linksMore = utils.getAll(floor, 'li.more-item');
-            // 导航条高度
-            floorHeight = floor.offsetHeight;
-
-            // 标签对应的高度集合
-            (function initLinksScope() {
-                var scrollTop = doc.documentElement.scrollTop || doc.body.scrollTop || win.pageYOffset;
-                for (var i = 0; i < links.length; i++) {
-                    var range = { hash: links[i].hash };
-                    range.min = utils.getEle(doc, links[i].hash).getBoundingClientRect().top + scrollTop;
-                    if (i < links.length - 1) {
-                        range.max = utils.getEle(doc, links[i + 1].hash).getBoundingClientRect().top + scrollTop;
-                    } else {
-                        range.max = doc.documentElement.scrollHeight || doc.body.scrollHeight;
-                    }
-                    scopes.push(range);
-                }
-            })();
-
+            // console.log(this.scopes);
             // 支持 sticky
             if (utils.supportSticky()) {
-                isSticky = true;
-                floor.classList.add('floor-sticky');
+                this.floor.classList.add('floor-sticky');
             }
+            // 绑定事件
+            this._bindEvents();
+        },
+        _initScopes: function () {
+            var self = this, scopes = [],
+                scrollTop = document.documentElement.scrollTop || document.body.scrollTop || window.pageYOffset;
+            for (var i = 0; i < self.links.length; i++) {
+                var range = { hash: self.links[i].hash };
+                range.min = utils.getEle(document, self.links[i].hash).getBoundingClientRect().top + scrollTop;
+                if (i < self.links.length - 1) {
+                    range.max = utils.getEle(document, self.links[i + 1].hash).getBoundingClientRect().top + scrollTop;
+                } else {
+                    range.max = document.documentElement.scrollHeight || document.body.scrollHeight;
+                }
+                scopes.push(range);
+            }
+            return scopes;
+        },
+        _bindEvents: function () {
+            var self = this;
+            // 监听滚动
+            window.addEventListener('scroll', function () {
+                window.requestAnimationFrame(self._onScroll.bind(self));
+            }, false);
 
-            (function eventBind() {
-                // 监听滚动
-                var floorFun = utils.throttle(floorScroll, 0, 1000 / 60);
-                win.addEventListener('scroll', floorFun, false);
+            // 导航项的点击绑定
+            var internal = utils.getAll(self.floor, 'a[href^="#"]:not([href="#"])'), a;
+            for (var i = internal.length; a = internal[--i];) {
+                a.addEventListener("click", function (ev) {
+                    if (!ev.defaultPrevented) {
+                        ev.preventDefault();
 
-                // 导航项的点击绑定
-                var internal = utils.getAll(floor, 'a[href^="#"]:not([href="#"])'), a;
-                for (var i = internal.length; a = internal[--i];) {
-                    a.addEventListener("click", function (ev) {
-                        if (!ev.defaultPrevented) {
-                            ev.preventDefault();
+                        if (location.hash !== this.hash) {
+                            history.pushState(null, null, this.hash);
+                        }
 
-                            if (location.hash !== this.hash) {
-                                history.pushState(null, null, this.hash);
-                            }
-
-                            for (var i = 0; i < scopes.length; i++) {
-                                if (scopes[i].hash == this.hash) {
-                                    win.scroll(0, scopes[i].min - floorHeight);
-                                    break;
-                                }
+                        for (var i = 0; i < self.scopes.length; i++) {
+                            if (self.scopes[i].hash == this.hash) {
+                                window.scroll(0, self.scopes[i].min - self.height);
+                                break;
                             }
                         }
-                    }, false);
-                }
-                // 弹出下拉框
-                utils.getEle(floor, '.floor-icon-down').addEventListener('click', function (ev) {
-                    utils.getEle(floor, '.floor-more').style.display = 'block';
-                    ev.stopPropagation();
-                });
-                // 关闭下拉框
-                utils.getEle(floor, '.floor-more').addEventListener('click', function (ev) {
-                    this.style.display = 'none';
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                });
-            })();
-
-            //　楼层滚动方法
-            function floorScroll() {
-                if (!isSticky) {
-                    // getBoundingClientRect耗费性能，所以用sticky做优化
-                    var top = floor.getBoundingClientRect().top;
-                    if (top <= 0) {
-                        utils.getEle(floor, '.floor-inner').classList.add('floor-fixed');
-                    } else {
-                        utils.getEle(floor, '.floor-inner').classList.remove('floor-fixed');
                     }
+                }, false);
+            }
+            // 弹出下拉框
+            utils.getEle(self.floor, '.floor-icon-down').addEventListener('click', function (ev) {
+                utils.getEle(self.floor, '.floor-more').style.display = 'block';
+                ev.stopPropagation();
+            });
+            // 关闭下拉框
+            utils.getEle(self.floor, '.floor-more').addEventListener('click', function (ev) {
+                this.style.display = 'none';
+                ev.preventDefault();
+                ev.stopPropagation();
+            });
+        },
+        _onScroll: function () {
+            var self = this;
+            if (!self.floor.classList.contains('floor-sticky')) {
+                // getBoundingClientRect耗费性能，所以用sticky做优化
+                var top = self.floor.getBoundingClientRect().top;
+                if (top <= 0) {
+                    utils.getEle(self.floor, '.floor-inner').classList.add('floor-fixed');
+                } else {
+                    utils.getEle(self.floor, '.floor-inner').classList.remove('floor-fixed');
                 }
-
-                // 要加上导航条的高度作纠正
-                // 加上1像素可以弥补小数点问题
-                var scrollTop = (doc.documentElement.scrollTop || doc.body.scrollTop || win.pageYOffset) + floorHeight + 1;
-                for (var i = 0; i < scopes.length; i++) {
-                    if (scrollTop >= scopes[i].min && scrollTop < scopes[i].max) {
-                        links[i].classList.add('active');
-                        linksMore[i].classList.add('active');
-                        //myScroll.scrollToElement(links[i], 500, 0);
-                    } else {
-                        links[i].classList.remove('active');
-                        linksMore[i].classList.remove('active');
-                    }
+            }
+            // 要加上导航条的高度作纠正
+            // 加上1像素可以弥补小数点问题
+            var scrollTop = (document.documentElement.scrollTop || document.body.scrollTop || window.pageYOffset) + self.height + 1;
+            for (var i = 0; i < self.scopes.length; i++) {
+                if (scrollTop >= self.scopes[i].min && scrollTop < self.scopes[i].max) {
+                    self.links[i].classList.add('active');
+                    self.linksMore[i].classList.add('active');
+                    //self.iScroll.scrollToElement(links[i], 500, 0);
+                } else {
+                    self.links[i].classList.remove('active');
+                    self.linksMore[i].classList.remove('active');
                 }
             }
         }

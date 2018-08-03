@@ -88,8 +88,9 @@
 
 <script src="./floor-memu.js"></script>
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function(e) {
-        floorMemu.init('#floor');
+    window.addEventListener('load', function(e) {
+        console.log(floorMemu);
+        new floorMemu('#floor').init();
     }, false);
 </script>
 </body>
