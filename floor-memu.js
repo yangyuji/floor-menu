@@ -3,7 +3,7 @@
 * license: "MIT",
 * github: "https://github.com/yangyuji/floor-memu",
 * name: "floor-memu.js",
-* version: "1.2.0"
+* version: "1.2.1"
 */
 
 (function (root, factory) {
@@ -33,26 +33,31 @@
 
     function floorMemu (el) {
         this.floor = typeof el == 'string' ? document.querySelector(el) : el;
-        // 导航标签
-        this.links = utils.getAll(this.floor, 'a.tabs-nav');
-        this.linksMore = utils.getAll(this.floor, 'li.more-item');
         // 导航条高度
         this.height = this.floor.offsetHeight;
-        this.scopes = this._initScopes();
+        this.scopes = null;
+        // 导航标签
+        this.links = null;
+        this.linksMore = null;
     }
 
     floorMemu.prototype = {
-        version: '1.2.0',
+        version: '1.2.1',
         // 初始化
         init: function () {
             if (!this.floor) return;
+
+            this.links = utils.getAll(this.floor, 'a.tabs-nav');
+            this.linksMore = utils.getAll(this.floor, 'li.more-item');
+            this.scopes = this._initScopes();
+
             // 楼层定位组件的滚动
-            // this.iScroll = new IScroll('.floor-tabs-inner', {
-            //     scrollX: true,
-            //     preventDefault: false,
-            //     scrollbars: false
-            // });
-            // console.log(this.scopes);
+            this.iScroll = new IScroll('.floor-tabs-inner', {
+                scrollX: true,
+                preventDefault: false,
+                scrollbars: false
+            });
+
             // 支持 sticky
             if (utils.supportSticky()) {
                 this.floor.classList.add('floor-sticky');
@@ -66,7 +71,7 @@
             for (var i = 0; i < self.links.length; i++) {
                 var range = { hash: self.links[i].hash };
                 range.min = utils.getEle(document, self.links[i].hash).getBoundingClientRect().top + scrollTop;
-                if (i < self.links.length - 1) {
+                if (i < self.links.length - 1 && self.links[i + 1].hash) {
                     range.max = utils.getEle(document, self.links[i + 1].hash).getBoundingClientRect().top + scrollTop;
                 } else {
                     range.max = document.documentElement.scrollHeight || document.body.scrollHeight;
@@ -132,7 +137,7 @@
                 if (scrollTop >= self.scopes[i].min && scrollTop < self.scopes[i].max) {
                     self.links[i].classList.add('active');
                     self.linksMore[i].classList.add('active');
-                    //self.iScroll.scrollToElement(links[i], 500, 0);
+                    self.iScroll.scrollToElement(self.links[i], 500, 0);
                 } else {
                     self.links[i].classList.remove('active');
                     self.linksMore[i].classList.remove('active');
