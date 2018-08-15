@@ -35,10 +35,6 @@
         this.floor = typeof el == 'string' ? document.querySelector(el) : el;
         // 导航条高度
         this.height = this.floor.offsetHeight;
-        this.scopes = null;
-        // 导航标签
-        this.links = null;
-        this.linksMore = null;
     }
 
     floorMemu.prototype = {
