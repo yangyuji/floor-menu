@@ -3,7 +3,7 @@
 * license: "MIT",
 * github: "https://github.com/yangyuji/floor-memu",
 * name: "floor-memu.js",
-* version: "1.2.1"
+* version: "1.2.2"
 */
 
 (function (root, factory) {
@@ -24,6 +24,13 @@
         getAll: function (scope, dom) {
             return scope.querySelectorAll(dom)
         },
+        getPageHeight: function () {
+            var doc = document,
+                body = doc.body,
+                el = doc.documentElement,
+                page = doc.compatMode == "CSS1Compat" ? el : body;
+            return Math.max(el.scrollHeight, body.scrollHeight, page.clientHeight);
+        },
         supportSticky: function () {
             var e = document.createElement("div");
             return window.CSS && window.CSS.supports ? window.CSS.supports("(position: sticky) or (position: -webkit-sticky)") : (e.style.position = "sticky",
@@ -33,12 +40,16 @@
 
     function floorMemu (el) {
         this.floor = typeof el == 'string' ? document.querySelector(el) : el;
+        // 页面高度
+        this.pageHeight = utils.getPageHeight();
         // 导航条高度
-        this.height = this.floor.offsetHeight;
+        this.floorHeight = this.floor.offsetHeight;
+        // 初始化
+        this.init();
     }
 
     floorMemu.prototype = {
-        version: '1.2.1',
+        version: '1.2.2',
         // 初始化
         init: function () {
             if (!this.floor) return;
@@ -63,14 +74,14 @@
         },
         _initScopes: function () {
             var self = this, scopes = [],
-                scrollTop = document.documentElement.scrollTop || document.body.scrollTop || window.pageYOffset;
+                scrollTop = window.pageYOffset;
             for (var i = 0; i < self.links.length; i++) {
                 var range = { hash: self.links[i].hash };
                 range.min = utils.getEle(document, self.links[i].hash).getBoundingClientRect().top + scrollTop;
                 if (i < self.links.length - 1 && self.links[i + 1].hash) {
                     range.max = utils.getEle(document, self.links[i + 1].hash).getBoundingClientRect().top + scrollTop;
                 } else {
-                    range.max = document.documentElement.scrollHeight || document.body.scrollHeight;
+                    range.max = self.pageHeight;
                 }
                 scopes.push(range);
             }
@@ -96,7 +107,7 @@
 
                         for (var i = 0; i < self.scopes.length; i++) {
                             if (self.scopes[i].hash == this.hash) {
-                                window.scroll(0, self.scopes[i].min - self.height);
+                                window.scroll(0, self.scopes[i].min - self.floorHeight);
                                 break;
                             }
                         }
@@ -128,7 +139,7 @@
             }
             // 要加上导航条的高度作纠正
             // 加上1像素可以弥补小数点问题
-            var scrollTop = (document.documentElement.scrollTop || document.body.scrollTop || window.pageYOffset) + self.height + 1;
+            var scrollTop = window.pageYOffset + self.floorHeight + 1;
             for (var i = 0; i < self.scopes.length; i++) {
                 if (scrollTop >= self.scopes[i].min && scrollTop < self.scopes[i].max) {
                     self.links[i].classList.add('active');
