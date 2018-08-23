@@ -1,4 +1,4 @@
-# floor-memu
+# floor-menu
 电商网站H5活动页面常用的楼层定位菜单实现
 
 ## 实现功能
@@ -9,5 +9,5 @@
 > *  依赖iScroll，也可以去掉这个库自己实现菜单栏的滚动定位；
 
 ## 预览
-> * 页面[点击这里](https://yangyuji.github.io/floor-memu/demo.html)
-> * ![扫描二维码](https://github.com/yangyuji/floor-memu/blob/master/qrcode.png)
+> * 页面[点击这里](https://yangyuji.github.io/floor-menu/demo.html)
+> * ![扫描二维码](https://github.com/yangyuji/floor-menu/blob/master/qrcode.png)

@@ -1,8 +1,8 @@
 /*
 * author: "oujizeng",
 * license: "MIT",
-* github: "https://github.com/yangyuji/floor-memu",
-* name: "floor-memu.js",
+* github: "https://github.com/yangyuji/floor-menu",
+* name: "floor-menu.js",
 * version: "1.2.2"
 */
 
@@ -12,7 +12,7 @@
     } else if (typeof define == 'function' && define.amd) {
         define( function () { return factory(); } );
     } else {
-        root['floorMemu'] = factory();
+        root['floorMenu'] = factory();
     }
 }(this, function () {
     'use strict'
@@ -38,7 +38,7 @@
         }
     };
 
-    function floorMemu (el) {
+    function floorMenu (el) {
         this.floor = typeof el == 'string' ? document.querySelector(el) : el;
         // 页面高度
         this.pageHeight = utils.getPageHeight();
@@ -48,7 +48,7 @@
         this.init();
     }
 
-    floorMemu.prototype = {
+    floorMenu.prototype = {
         version: '1.2.2',
         // 初始化
         init: function () {
@@ -153,5 +153,5 @@
         }
     }
 
-    return floorMemu;
+    return floorMenu;
 }));
