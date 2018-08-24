@@ -54,7 +54,7 @@
         init: function () {
             if (!this.floor) return;
 
-            this.links = utils.getAll(this.floor, 'a.tabs-nav');
+            this.links = utils.getAll(this.floor, 'a[href^="#"]:not([href="#"]).tabs-nav');
             this.linksMore = utils.getAll(this.floor, 'li.more-item');
             this.scopes = this._initScopes();
 
@@ -78,7 +78,7 @@
             for (var i = 0; i < self.links.length; i++) {
                 var range = { hash: self.links[i].hash };
                 range.min = utils.getEle(document, self.links[i].hash).getBoundingClientRect().top + scrollTop;
-                if (i < self.links.length - 1 && self.links[i + 1].hash) {
+                if (i < self.links.length - 1) {
                     range.max = utils.getEle(document, self.links[i + 1].hash).getBoundingClientRect().top + scrollTop;
                 } else {
                     range.max = self.pageHeight;
