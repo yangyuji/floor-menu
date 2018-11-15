@@ -3,7 +3,7 @@
 * license: "MIT",
 * github: "https://github.com/yangyuji/floor-menu",
 * name: "floor-menu.js",
-* version: "1.2.2"
+* version: "1.2.3"
 */
 
 (function (root, factory) {
@@ -49,7 +49,7 @@
     }
 
     floorMenu.prototype = {
-        version: '1.2.2',
+        version: '1.2.3',
         // 初始化
         init: function () {
             if (!this.floor) return;
@@ -71,6 +71,10 @@
             }
             // 绑定事件
             this._bindEvents();
+        },
+        // 更新scopes的值，动态加载内容可以执行一下update
+        update: function () {
+            this.scopes = this._initScopes();
         },
         _initScopes: function () {
             var self = this, scopes = [],
