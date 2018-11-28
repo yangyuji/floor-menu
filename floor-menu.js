@@ -1,9 +1,9 @@
-/*
+/**
 * author: "oujizeng",
 * license: "MIT",
 * github: "https://github.com/yangyuji/floor-menu",
 * name: "floor-menu.js",
-* version: "1.2.3"
+* version: "1.2.4"
 */
 
 (function (root, factory) {
@@ -49,14 +49,13 @@
     }
 
     floorMenu.prototype = {
-        version: '1.2.3',
+        version: '1.2.4',
         // 初始化
         init: function () {
             if (!this.floor) return;
 
             this.links = utils.getAll(this.floor, 'a[href^="#"]:not([href="#"]).tabs-nav');
             this.linksMore = utils.getAll(this.floor, 'li.more-item');
-            this.scopes = this._initScopes();
 
             // 楼层定位组件的滚动
             this.iScroll = new IScroll('.floor-tabs-inner', {
@@ -65,12 +64,15 @@
                 scrollbars: false
             });
 
+            var self = this;
+            setTimeout(function () {
+                self.scopes = self._initScopes();
+            });
+
             // 支持 sticky
             if (utils.supportSticky()) {
                 this.floor.classList.add('floor-sticky');
             }
-            // 绑定事件
-            this._bindEvents();
         },
         // 更新scopes的值，动态加载内容可以执行一下update
         update: function () {
@@ -78,18 +80,25 @@
         },
         _initScopes: function () {
             var self = this, scopes = [],
-                scrollTop = window.pageYOffset;
-            for (var i = 0; i < self.links.length; i++) {
-                var range = { hash: self.links[i].hash };
-                range.min = utils.getEle(document, self.links[i].hash).getBoundingClientRect().top + scrollTop;
-                if (i < self.links.length - 1) {
-                    range.max = utils.getEle(document, self.links[i + 1].hash).getBoundingClientRect().top + scrollTop;
-                } else {
-                    range.max = self.pageHeight;
+                scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+            try {
+                for (var i = 0; i < self.links.length; i++) {
+                    var range = {hash: self.links[i].hash};
+                    range.min = utils.getEle(document, self.links[i].hash).getBoundingClientRect().top + scrollTop;
+                    if (i < self.links.length - 1) {
+                        range.max = utils.getEle(document, self.links[i + 1].hash).getBoundingClientRect().top + scrollTop;
+                    } else {
+                        range.max = self.pageHeight;
+                    }
+                    scopes.push(range);
                 }
-                scopes.push(range);
+                // 绑定事件
+                self._bindEvents.call(self);
+                return scopes;
+            } catch (err) {
+                console.warn(err);
+                window.alert('楼层定位组件配置错误，请核对配置！');
             }
-            return scopes;
         },
         _bindEvents: function () {
             var self = this;
@@ -97,6 +106,8 @@
             window.addEventListener('scroll', function () {
                 window.requestAnimationFrame(self._onScroll.bind(self));
             }, false);
+            // 执行一次
+            window.requestAnimationFrame(self._onScroll.bind(self));
 
             // 导航项的点击绑定
             var internal = utils.getAll(self.floor, 'a[href^="#"]:not([href="#"])'), a;
