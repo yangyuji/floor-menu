@@ -3,7 +3,7 @@
 * license: "MIT",
 * github: "https://github.com/yangyuji/floor-menu",
 * name: "floor-menu.js",
-* version: "1.2.4"
+* version: "1.2.5"
 */
 
 (function (root, factory) {
@@ -49,7 +49,7 @@
     }
 
     floorMenu.prototype = {
-        version: '1.2.4',
+        version: '1.2.5',
         // 初始化
         init: function () {
             if (!this.floor) return;
@@ -80,13 +80,13 @@
         },
         _initScopes: function () {
             var self = this, scopes = [],
-                scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+                offsetY = window.pageYOffset;
             try {
                 for (var i = 0; i < self.links.length; i++) {
                     var range = {hash: self.links[i].hash};
-                    range.min = utils.getEle(document, self.links[i].hash).getBoundingClientRect().top + scrollTop;
+                    range.min = utils.getEle(document, self.links[i].hash).getBoundingClientRect().top + offsetY;
                     if (i < self.links.length - 1) {
-                        range.max = utils.getEle(document, self.links[i + 1].hash).getBoundingClientRect().top + scrollTop;
+                        range.max = utils.getEle(document, self.links[i + 1].hash).getBoundingClientRect().top + offsetY;
                     } else {
                         range.max = self.pageHeight;
                     }
@@ -153,8 +153,7 @@
                 }
             }
             // 要加上导航条的高度作纠正
-            // 加上1像素可以弥补小数点问题
-            var scrollTop = window.pageYOffset + self.floorHeight + 1;
+            var scrollTop = window.pageYOffset + self.floorHeight;
             for (var i = 0; i < self.scopes.length; i++) {
                 if (scrollTop >= self.scopes[i].min && scrollTop < self.scopes[i].max) {
                     self.links[i].classList.add('active');
